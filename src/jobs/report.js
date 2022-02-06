@@ -1,7 +1,12 @@
 require('dotenv/config');
 const Doh1 = require('../doh1');
+const Message = require('../models/Message');
+const HE = require('../locales/he.json');
+const DB = require('../database');
 
 module.exports = async (job) => {
+
+    await DB.connect();
 
     const { user, reportType } = job.data;
 
@@ -13,6 +18,18 @@ module.exports = async (job) => {
 
     await doh1.attendance.insertPersonalReport(mainCode, secondaryCode);
 
-    // TODO: report/record that the report was ok
+    const currentDate = new Date();
+    const time = currentDate.toLocaleTimeString().substring(0, 5);
+    const date = currentDate.toLocaleDateString();
+
+    let message = HE.reports.successful;
+    message = message.replace("{{time}}", time);
+    message = message.replace("{{date}}", date);
+
+    await new Message({ text: message, user }).save();
+
+    // TODO: added report type to message
+
+    await DB.disconnect();
 
 };
