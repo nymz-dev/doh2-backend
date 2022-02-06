@@ -137,6 +137,56 @@ describe('Get to /users/me', () => {
 
 });
 
+describe('Patch to /users/me', () => {
+
+    it("user must be logged in", async () => {
+
+        const response = await request(app).patch('/users/');
+        expect(response.status).toBe(403);
+
+    });
+
+    it("notification is required", async () => {
+
+        await mockLoginRequest();
+        const data = { username: '123456789', password: '123456', recaptchaValue: 'ABCD' };
+        const token = await getToken(data);
+
+        const payload = { phone: "0541231234", whatsapp: false };
+        response = await request(app).patch('/users').set('Authorization', `Bearer ${token}`).send(payload);
+        expect(response.status).toBe(400);
+
+    });
+
+    it("whatsapp is required", async () => {
+
+        await mockLoginRequest();
+        const data = { username: '123456789', password: '123456', recaptchaValue: 'ABCD' };
+        const token = await getToken(data);
+
+        const payload = { phone: "0541231234", notification: false };
+        response = await request(app).patch('/users').set('Authorization', `Bearer ${token}`).send(payload);
+        expect(response.status).toBe(400);
+
+    });
+
+    it("route is working", async () => {
+
+        await mockLoginRequest();
+        const data = { username: '123456789', password: '123456', recaptchaValue: 'ABCD' };
+        const token = await getToken(data);
+
+        const payload = { phone: "0541231234", notification: false, whatsapp: true };
+        response = await request(app).patch('/users').set('Authorization', `Bearer ${token}`).send(payload);
+        expect(response.status).toBe(200);
+
+        const user = await User.findOne({ username: '123456789' });
+        expect(user).toMatchObject({ phone: "0541231234", notification: false, whatsapp: true });
+
+    });
+
+});
+
 describe("Post to /reports", () => {
 
     it("user must be logged in", async () => {
