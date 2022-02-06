@@ -7,9 +7,20 @@ const SchemaDefinition = {
         unique: true,
         dropDups: true,
     },
+
     password: String,
     cookie: String,
-    // phone: String,
+    phone: String,
+    
+    notification: {
+        type: Boolean,
+        default: false,
+    },
+    
+    whatsapp: {
+        type: Boolean,
+        default: false,
+    },
 
 };
 
