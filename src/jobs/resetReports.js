@@ -2,7 +2,7 @@ require('dotenv/config');
 const mongoose = require('mongoose');
 const Report = require('../models/Report');
 
-const execute = async () => {
+module.exports = async (job, done) => {
 
     mongoose.connect(process.env.DB_CONNECTION, () => {
 
@@ -24,5 +24,3 @@ const execute = async () => {
     await mongoose.connection.close().catch((err) => console.log(`[mongoose] ${err}`));
 
 }
-
-module.exports = execute;
