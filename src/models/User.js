@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 
 const SchemaDefinition = {
 
-    username: String,
+    username: {
+        type: String,
+        unique: true,
+        dropDups: true,
+    },
     password: String,
     cookie: String,
     // phone: String,
