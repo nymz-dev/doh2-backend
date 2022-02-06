@@ -4,6 +4,7 @@ const Doh1 = require('../doh1');
 const { object, string } = require('yup');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const HE = require('../locales/he.json');
 
 router.post('/login', async (req, res) => {
 
@@ -17,7 +18,7 @@ router.post('/login', async (req, res) => {
 
     if (validBody == false) {
 
-        res.status(400).json({ status: 'failed', reason: '...' })
+        res.status(400).json({ status: 'failed', reason: HE.login.invalid })
         return;
 
     }
@@ -29,7 +30,7 @@ router.post('/login', async (req, res) => {
 
     if (cookie == false) {
 
-        res.status(401).json({ 'status': 'failed', 'reason': '...' });
+        res.status(401).json({ status: 'failed', reason: HE.login.incorrect });
         return;
 
     }
