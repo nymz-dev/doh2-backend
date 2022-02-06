@@ -1,3 +1,4 @@
+require('dotenv/config');
 const express = require('express');
 const router = express.Router();
 const Doh1 = require('../doh1');
@@ -5,6 +6,13 @@ const { object, string } = require('yup');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const HE = require('../locales/he.json');
+const verifyToken = require('../middlewares/verifyToken');
+
+router.get('/me', verifyToken, async (req, res) => {
+
+    res.json(req.user);
+
+});
 
 router.post('/login', async (req, res) => {
 
