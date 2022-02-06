@@ -6,6 +6,21 @@ const { object, number, string, integer } = require('yup');
 const HE = require('../locales/he.json');
 const Report = require('../models/Report');
 
+router.get('/', verifyToken, async (req, res) => {
+
+    let report = await Report.findOne({ user: req.user._id });
+
+    if (report === null) {
+
+        res.status(404).json({ status: 'failed', reason: HE.reports.nonexistent });
+        return;
+
+    }
+
+    res.json({ status: 'success', data: { report } });
+
+});
+
 router.post('/', verifyToken, async (req, res) => {
 
     const fields = {
