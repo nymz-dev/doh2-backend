@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Doh1 = require('../doh1');
 const { object, string } = require('yup');
+const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 
 router.post('/login', async (req, res) => {
 

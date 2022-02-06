@@ -10,4 +10,4 @@ const SchemaDefinition = {
 };
 
 const UserSchema = new mongoose.Schema(SchemaDefinition, { timestamps: true });
-mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);
