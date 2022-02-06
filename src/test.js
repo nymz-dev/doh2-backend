@@ -201,3 +201,27 @@ describe("Post to /reports", () => {
     });
 
 });
+
+
+describe("Get to /reports", () => {
+
+    it("user must be logged in", async () => {
+
+        const response = await request(app).get('/reports');
+        expect(response.status).toBe(403);
+
+    });
+
+    it("route is working", async () => {
+
+        await mockLoginRequest();
+        let data = { username: '123456789', password: '123456', recaptchaValue: 'ABCD' };
+        const token = await getToken(data);
+        response = await request(app).get('/reports').set('Authorization', `Bearer ${token}`);
+        expect(response.status).toBe(200);
+
+    });
+
+});
+
+// TODO: improve tests speed
