@@ -54,6 +54,8 @@ router.post('/', verifyToken, async (req, res) => {
 
     res.json({ status: 'success', data: { report } });
 
+    // TODO: block other fields from entering the database
+
 });
 
 module.exports = router;
