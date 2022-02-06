@@ -16,6 +16,8 @@ const SchemaDefinition = {
         dropDups: true,
     },
 
+    // TODO: add disabled field
+
 };
 
 const ReportSchema = new mongoose.Schema(SchemaDefinition, { timestamps: true });
