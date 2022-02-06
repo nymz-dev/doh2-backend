@@ -112,3 +112,41 @@ describe('Post to /users/login', () => {
     });
 
 });
+
+describe('Get to /users/me', () => {
+
+    it("user must be logged in", async () => {
+
+        const response = await request(app).get('/users/me');
+        expect(response.status).toBe(403);
+
+    });
+
+    it("logged in users can access route", async () => {
+
+        const headers = {
+            'set-cookie': 'AppCookie=AAAA;'
+        };
+
+        const body = {
+            isUserAuth: true,
+            isCommanderAuth: false,
+            error: null,
+        }
+
+        nock('https://one.prat.idf.il')
+            .post('/api/account/login')
+            .reply(200, body, headers);
+
+        const data = { username: '123456789', password: '123456', recaptchaValue: 'ABCD' };
+        let response = await request(app).post('/users/login').send(data);
+        expect(response.status).toBe(200);
+
+        const token = response.body.data.token;
+        response = await request(app).get('/users/me').set('Authorization', `Bearer ${token}`);
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject({ username: '123456789' });
+
+    });
+
+});
