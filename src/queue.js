@@ -10,13 +10,13 @@ const dayjs = require('dayjs');
 
 // Report job
 
-const reportQueue = new Queue('A', { redis });
+const reportQueue = new Queue('Report', { redis });
 const reportJob = path.resolve('src', 'jobs', 'report.js');
 reportQueue.process(reportJob);
 
 // Reset reports job
 
-const resetReportsQueue = new Queue('B', { redis });
+const resetReportsQueue = new Queue('Reset Reports', { redis });
 const resetReportsJob = path.resolve('src', 'jobs', 'resetReports.js');
 resetReportsQueue.process(resetReportsJob);
 
@@ -29,7 +29,7 @@ schedule.scheduleJob('15 10 * * 4', () => {
 
 // Schedule reports job
 
-const scheduleReportsQueue = new Queue('C', { redis });
+const scheduleReportsQueue = new Queue('Schedule Reports', { redis });
 scheduleReportsQueue.process(async () => {
 
     await DB.connect();
@@ -62,7 +62,7 @@ schedule.scheduleJob('40 4 * * 0,1,2,3,4 ', () => {
 
 // WhatsApp job
 
-const WhatsAppQueue = new Queue('D', { redis });
+const WhatsAppQueue = new Queue('WhatsApp', { redis });
 const WhatsAppJob = path.resolve('src', 'jobs', 'whatsapp.js');
 WhatsAppQueue.process(WhatsAppJob);
 
