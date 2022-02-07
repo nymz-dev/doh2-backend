@@ -3,14 +3,7 @@ const DB = require('../database');
 const Message = require('../models/Message');
 const User = require('../models/User');
 const path = require('path');
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function randomInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const { sleep, randomInteger } = require('../helpers/utilities');
 
 isOkContact = async (contactId, client) => {
 
