@@ -6,7 +6,9 @@ const User = require('./models/User');
 const Report = require('./models/Report');
 const nock = require('nock');
 const resetReports = require('./jobs/resetReports');
+const report = require('./jobs/report');
 const DB = require('./database');
+const Message = require('./models/Message');
 
 const mockLoginRequest = () => {
 
@@ -295,6 +297,35 @@ describe("Reset reports job", () => {
         await DB.connect();
         report = await Report.findOne({});
         expect(report).not.toMatchObject(data);
+
+    });
+
+});
+
+describe("Report job is working", () => {
+
+    it("job is working", async () => {
+
+        nock('https://one.prat.idf.il')
+            .post('/api/Attendance/InsertPersonalReport')
+            .reply(200);
+
+        const oldMessagesCount = await Message.count({});
+
+        const user = await User.findOne({});
+        const job = {
+            data: {
+                user,
+                reportType: "0101"
+            }
+        };
+
+        await DB.disconnect();
+        await report(job);
+        await DB.connect();
+
+        const newMessagesCount = await Message.count({});
+        expect(newMessagesCount).toBe(oldMessagesCount + 1);
 
     });
 
