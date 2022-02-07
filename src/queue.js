@@ -3,23 +3,24 @@ const Queue = require('bull');
 const Report = require('./models/Report');
 var path = require("path");
 const DB = require('./database');
+const redis = require('../config/redis');
 
 // Report job
 
-const reportQueue = new Queue('A', { redis: { port: 6379, host: '127.0.0.1' } });
+const reportQueue = new Queue('A', { redis });
 const reportJob = path.resolve('src', 'jobs', 'report.js');
 reportQueue.process(reportJob);
 
 // Reset reports job
 
-const resetReportsQueue = new Queue('B', { redis: { port: 6379, host: '127.0.0.1' } });
+const resetReportsQueue = new Queue('B', { redis });
 const resetReportsJob = path.resolve('src', 'jobs', 'resetReports.js');
 resetReportsQueue.process(resetReportsJob);
 resetReportsQueue.add({}, { repeat: { cron: '15 10 * * 4' } }); // At 10:15 on Thursday.
 
 // Schedule reports job
 
-const scheduleReportsQueue = new Queue('C', { redis: { port: 6379, host: '127.0.0.1' } });
+const scheduleReportsQueue = new Queue('C', { redis });
 scheduleReportsQueue.process(async () => {
 
     await DB.connect();
@@ -47,7 +48,7 @@ scheduleReportsQueue.add({}, { repeat: { cron: '40 4 * * 0,1,2,3,4 ' } }); // At
 
 // WhatsApp job
 
-const WhatsAppQueue = new Queue('D', { redis: { port: 6379, host: '127.0.0.1' } });
+const WhatsAppQueue = new Queue('D', { redis });
 const WhatsAppJob = path.resolve('src', 'jobs', 'whatsapp.js');
 WhatsAppQueue.process(WhatsAppJob);
 WhatsAppQueue.add({}, { repeat: { cron: '0 6,7,8,9,10 * * 0,1,2,3,4' } }); // At minute 0 past hour 6, 7, 8, 9, and 10 on Sunday, Monday, Tuesday, Wednesday, and Thursday.
