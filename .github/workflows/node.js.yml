@@ -1,0 +1,53 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main, deploy ]
+  pull_request:
+    branches: [ main ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - uses: supercharge/mongodb-github-action@1.7.0
+        with:
+          mongodb-version: 4.4
+      - uses: supercharge/redis-github-action@1.1.0
+      - run: cp .env.exmaple .env
+      - run: npm ci
+      - run: npm test
+        env:
+          CI: true
+          SECRET_KEY: '6vRMbA'
+          DB_CONNECTION: mongodb://127.0.0.1:27017/database
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/deploy'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: git config user.name "GitHub Actions Bot"
+      - run: git config user.email "<>"
+      - run: git pull --all
+      - run: git checkout production
+      - run: git rebase deploy
+      - run: git push origin production
+      - uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            cd doh1-backend
+            export NVM_DIR="$HOME/.nvm" # We should not load it like this :(
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # TODO: find a solution for this and above commands
+            ./update.sh
+
