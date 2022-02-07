@@ -1,16 +1,11 @@
 require('dotenv/config');
 const mongoose = require('mongoose');
+const DB = require('../database');
 const Report = require('../models/Report');
 
 module.exports = async (job, done) => {
 
-    mongoose.connect(process.env.DB_CONNECTION, () => {
-
-        const isConnected = mongoose.connection.readyState == 1;
-        isConnected && console.log('[mongoose] Connected to DB.');
-        isConnected == false && console.log('[mongoose] Connection to DB failed.');
-
-    });
+    await DB.connect();
 
     const days = {
         sunday: 1,
@@ -21,6 +16,6 @@ module.exports = async (job, done) => {
     };
 
     await Report.updateMany({}, { $unset: days });
-    await mongoose.connection.close().catch((err) => console.log(`[mongoose] ${err}`));
+    await DB.disconnect();
 
 }

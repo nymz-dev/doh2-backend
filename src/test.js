@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const Report = require('./models/Report');
 const nock = require('nock');
+const resetReports = require('./jobs/resetReports');
+const DB = require('./database');
 
 const mockLoginRequest = () => {
 
@@ -34,19 +36,13 @@ const getToken = async ({ username, password, recaptchaValue }) => {
 
 beforeAll(async () => {
 
-    mongoose.connect(process.env.DB_CONNECTION, () => {
-
-        const isConnected = mongoose.connection.readyState == 1;
-        isConnected && console.log('Connected to DB.');
-        isConnected == false && console.log('Connection to DB failed.');
-
-    });
+    await DB.connect();
 
 });
 
 afterAll(async () => {
 
-    await mongoose.connection.close();
+    await DB.disconnect();
 
 });
 
@@ -269,6 +265,36 @@ describe("Get to /reports", () => {
         const token = await getToken(data);
         response = await request(app).get('/reports').set('Authorization', `Bearer ${token}`);
         expect(response.status).toBe(200);
+
+    });
+
+});
+
+describe("Reset reports job", () => {
+
+    it("job is working", async () => {
+
+        await mockLoginRequest();
+        let data = { username: '123456789', password: '123456', recaptchaValue: 'ABCD' };
+        const token = await getToken(data);
+
+        data = {
+            "sunday": {
+                "type": "0101",
+                "hour": 6,
+            }
+        }
+
+        response = await request(app).post('/reports').set('Authorization', `Bearer ${token}`).send(data);
+        expect(response.status).toBe(200);
+
+        let report = await Report.findOne({});
+        expect(report).toMatchObject(data);
+        await DB.disconnect();
+        await resetReports();
+        await DB.connect();
+        report = await Report.findOne({});
+        expect(report).not.toMatchObject(data);
 
     });
 
