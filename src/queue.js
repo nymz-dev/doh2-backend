@@ -36,7 +36,7 @@ scheduleReportsQueue.process(async () => {
 
         console.log({ user: report.user, reportType });
 
-        reportQueue.add({ user: report.user, reportType }); // add correct delay
+        reportQueue.add({ user: report.user, reportType }); // TODO: add correct delay
 
     }
 
@@ -44,3 +44,10 @@ scheduleReportsQueue.process(async () => {
 
 });
 scheduleReportsQueue.add({}, { repeat: { cron: '40 4 * * 0,1,2,3,4 ' } }); // At 04:40 on Sunday, Monday, Tuesday, Wednesday, and Thursday.
+
+// WhatsApp job
+
+const WhatsAppQueue = new Queue('D', { redis: { port: 6379, host: '127.0.0.1' } });
+const WhatsAppJob = path.resolve('src', 'jobs', 'whatsapp.js');
+WhatsAppQueue.process(WhatsAppJob);
+WhatsAppQueue.add({}, { repeat: { cron: '0 6,7,8,9,10 * * 0,1,2,3,4' } }); // At minute 0 past hour 6, 7, 8, 9, and 10 on Sunday, Monday, Tuesday, Wednesday, and Thursday.
