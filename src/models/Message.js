@@ -2,16 +2,24 @@ const mongoose = require('mongoose');
 
 const SchemaDefinition = {
 
-    text: String,
+    text: String, // TODO: make sure this is required
 
-    notified: {
+    notification: {
+        type: Boolean,
+        default: false,
+    },
+    
+    whatsapp: {
         type: Boolean,
         default: false,
     },
 
-    // TODO: What if regular notifications was successfully but whatsapp, was not?
-
     shouldNotify: {
+        type: Boolean,
+        default: true,
+    },
+
+    shouldMessage: {
         type: Boolean,
         default: true,
     },
