@@ -14,11 +14,59 @@ const reportQueue = new Queue('Report', { redis });
 const reportJob = path.resolve('src', 'jobs', 'report.js');
 reportQueue.process(reportJob);
 
+reportQueue.on('error', (error) => {
+
+    console.log(`[reportQueue] Error: ${error}`);
+
+});
+
+reportQueue.on('stalled', (job) => {
+
+    console.log('[reportQueue] A job has been marked as stalled.');
+
+});
+
+reportQueue.on('failed', (job, err) => {
+
+    console.log(`[reportQueue] Failed: ${err}.`);
+
+});
+
+reportQueue.on('removed', (job) => {
+
+    console.log('[reportQueue] A job successfully removed.');
+
+});
+
 // Reset reports job
 
 const resetReportsQueue = new Queue('Reset Reports', { redis });
 const resetReportsJob = path.resolve('src', 'jobs', 'resetReports.js');
 resetReportsQueue.process(resetReportsJob);
+
+resetReportsQueue.on('error', (error) => {
+
+    console.log(`[resetReportsQueue] Error: ${error}`);
+
+});
+
+resetReportsQueue.on('stalled', (job) => {
+
+    console.log('[resetReportsQueue] A job has been marked as stalled.');
+
+});
+
+resetReportsQueue.on('failed', (job, err) => {
+
+    console.log(`[resetReportsQueue] Failed: ${err}.`);
+
+});
+
+resetReportsQueue.on('removed', (job) => {
+
+    console.log('[resetReportsQueue] A job successfully removed.');
+
+});
 
 schedule.scheduleJob('15 10 * * 4', () => {
 
@@ -54,6 +102,30 @@ scheduleReportsQueue.process(async () => {
 
 });
 
+scheduleReportsQueue.on('error', (error) => {
+
+    console.log(`[scheduleReportsQueue] Error: ${error}`);
+
+});
+
+scheduleReportsQueue.on('stalled', (job) => {
+
+    console.log('[scheduleReportsQueue] A job has been marked as stalled.');
+
+});
+
+scheduleReportsQueue.on('failed', (job, err) => {
+
+    console.log(`[scheduleReportsQueue] Failed: ${err}.`);
+
+});
+
+scheduleReportsQueue.on('removed', (job) => {
+
+    console.log('[scheduleReportsQueue] A job successfully removed.');
+
+});
+
 schedule.scheduleJob('40 4 * * 0,1,2,3,4 ', () => {
 
     scheduleReportsQueue.add(); // At 04:40 on Sunday, Monday, Tuesday, Wednesday, and Thursday.
@@ -65,6 +137,30 @@ schedule.scheduleJob('40 4 * * 0,1,2,3,4 ', () => {
 const WhatsAppQueue = new Queue('WhatsApp', { redis });
 const WhatsAppJob = path.resolve('src', 'jobs', 'whatsapp.js');
 WhatsAppQueue.process(WhatsAppJob);
+
+WhatsAppQueue.on('error', (error) => {
+
+    console.log(`[WhatsAppQueue] Error: ${error}`);
+
+});
+
+WhatsAppQueue.on('stalled', (job) => {
+
+    console.log('[WhatsAppQueue] A job has been marked as stalled.');
+
+});
+
+WhatsAppQueue.on('failed', (job, err) => {
+
+    console.log(`[WhatsAppQueue] Failed: ${err}.`);
+
+});
+
+WhatsAppQueue.on('removed', (job) => {
+
+    console.log('[WhatsAppQueue] A job successfully removed.');
+
+});
 
 schedule.scheduleJob('0 6,7,8,9,10 * * 0,1,2,3,4', () => {
 
