@@ -17,7 +17,7 @@ reportQueue.process(reportJob);
 
 reportQueue.on('error', (error) => {
 
-    console.log(`[reportQueue] Error: ${error}`);
+    console.error(`[reportQueue] Error: ${error}`);
 
 });
 
@@ -29,7 +29,7 @@ reportQueue.on('stalled', (job) => {
 
 reportQueue.on('failed', (job, err) => {
 
-    console.log(`[reportQueue] Failed: ${err}.`);
+    console.error(`[reportQueue] Failed: ${err}.`);
 
 });
 
@@ -47,7 +47,7 @@ resetReportsQueue.process(resetReportsJob);
 
 resetReportsQueue.on('error', (error) => {
 
-    console.log(`[resetReportsQueue] Error: ${error}`);
+    console.error(`[resetReportsQueue] Error: ${error}`);
 
 });
 
@@ -59,7 +59,7 @@ resetReportsQueue.on('stalled', (job) => {
 
 resetReportsQueue.on('failed', (job, err) => {
 
-    console.log(`[resetReportsQueue] Failed: ${err}.`);
+    console.error(`[resetReportsQueue] Failed: ${err}.`);
 
 });
 
@@ -106,7 +106,7 @@ scheduleReportsQueue.process(async () => {
 
 scheduleReportsQueue.on('error', (error) => {
 
-    console.log(`[scheduleReportsQueue] Error: ${error}`);
+    console.error(`[scheduleReportsQueue] Error: ${error}`);
 
 });
 
@@ -118,7 +118,7 @@ scheduleReportsQueue.on('stalled', (job) => {
 
 scheduleReportsQueue.on('failed', (job, err) => {
 
-    console.log(`[scheduleReportsQueue] Failed: ${err}.`);
+    console.error(`[scheduleReportsQueue] Failed: ${err}.`);
 
 });
 
@@ -142,7 +142,7 @@ WhatsAppQueue.process(WhatsAppJob);
 
 WhatsAppQueue.on('error', (error) => {
 
-    console.log(`[WhatsAppQueue] Error: ${error}`);
+    console.error(`[WhatsAppQueue] Error: ${error}`);
 
 });
 
@@ -154,7 +154,7 @@ WhatsAppQueue.on('stalled', (job) => {
 
 WhatsAppQueue.on('failed', (job, err) => {
 
-    console.log(`[WhatsAppQueue] Failed: ${err}.`);
+    console.error(`[WhatsAppQueue] Failed: ${err}.`);
 
 });
 
