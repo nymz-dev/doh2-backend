@@ -1,6 +1,7 @@
 require('dotenv/config');
 const Queue = require('bull');
 const Report = require('./models/Report');
+const User = require('./models/User');
 var path = require('path');
 const DB = require('./database');
 const redis = require('../config/redis');
@@ -90,11 +91,12 @@ scheduleReportsQueue.process(async () => {
     for (let i = 0; i < reports.length; i++) {
 
         const report = reports[i];
+        const user = await User.findOne({ _id: report.user });
         const reportType = report[currentDay]['type'];
         const reportHour = report[currentDay]['hour'];
         const reportMinute = randomInteger(0, 59);
         const delay = dayjs().hour(reportHour).minute(reportMinute).valueOf() - dayjs().valueOf();
-        reportQueue.add({ user: report.user, reportType }, { delay });
+        reportQueue.add({ user, reportType }, { delay });
 
     }
 
