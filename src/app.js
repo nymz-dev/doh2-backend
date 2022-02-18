@@ -1,4 +1,5 @@
 const express = require('express');
+const { formatSeconds } = require('./helpers/utilities');
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.use('/reports', reportsRoute);
 app.get('/', (req, res) => {
 
     const data = {
-        // uptime: formatSeconds(process.uptime()), TODO: create this function
+        uptime: formatSeconds(process.uptime()),
         message: 'Ok',
         date: new Date()
     };
