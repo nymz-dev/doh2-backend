@@ -59,11 +59,11 @@ router.post('/', verifyToken, async (req, res) => {
 
     const { sunday, monday, tuesday, wednesday, thursday } = req.body;
 
-    report.sunday = sunday;
-    report.monday = monday;
-    report.tuesday = tuesday;
-    report.wednesday = wednesday;
-    report.thursday = thursday;
+    report.sunday = sunday ? sunday : report.sunday; 
+    report.monday = monday ? monday : report.monday;
+    report.tuesday = tuesday ? tuesday : report.tuesday;
+    report.wednesday = wednesday ? wednesday : report.wednesday;
+    report.thursday = thursday ? thursday : report.thursday;
 
     await report.save();
 
