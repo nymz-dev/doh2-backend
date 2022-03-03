@@ -81,7 +81,8 @@ router.post('/login', async (req, res) => {
 
     }
 
-    user.password = password;
+    // DON'T UNCOMMENT! BAM
+    //  user.password = password;
     user.cookie = cookie;
     await user.save();
 
